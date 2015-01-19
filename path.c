@@ -18,6 +18,11 @@
 #include "lockfile.h"
 #include "exec-cmd.h"
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#include <StorageDefs.h>
+#endif
+
 static int get_st_mode_bits(const char *path, int *mode)
 {
 	struct stat st;
@@ -1546,11 +1551,19 @@ char *xdg_config_home_for(const char *subdir, const char *filename)
 {
 	const char *home, *config_home;
 
+#ifdef __HAIKU__
+	char settingsPath[B_PATH_NAME_LENGTH];
+	assert(filename);
+	if (find_directory(B_USER_SETTINGS_DIRECTORY, -1, true, settingsPath,
+		sizeof(settingsPath)) == B_OK)
+		return mkpathdup("%s/git/%s", settingsPath, filename);
+#else
 	assert(subdir);
 	assert(filename);
 	config_home = getenv("XDG_CONFIG_HOME");
 	if (config_home && *config_home)
 		return mkpathdup("%s/%s/%s", config_home, subdir, filename);
+#endif
 
 	home = getenv("HOME");
 	if (home)
