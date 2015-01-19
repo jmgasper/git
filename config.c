@@ -3060,6 +3060,14 @@ int repo_config_set_multivar_in_file_gently(struct repository *r,
 	if (!config_filename)
 		config_filename = filename_buf = repo_git_path(r, "config");
 
+	if (find_last_dir_sep(config_filename) != NULL)  {
+		char *config_dir = xstrdup(config_filename);
+		* find_last_dir_sep(config_dir) = '\0';
+		if (access(config_dir, F_OK) != 0)
+			mkdir(config_dir, 0755);
+		free(config_dir);
+	}
+
 	/*
 	 * The lock serves a purpose in addition to locking: the new
 	 * contents of .git/config will be written into it.
