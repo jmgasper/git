@@ -1519,18 +1519,12 @@ char *git_global_config(void)
 	char *user_config, *xdg_config;
 
 	git_global_config_paths(&user_config, &xdg_config);
-	if (!user_config) {
-		free(xdg_config);
-		return NULL;
-	}
-
-	if (access_or_warn(user_config, R_OK, 0) && xdg_config &&
-	    !access_or_warn(xdg_config, R_OK, 0)) {
-		free(user_config);
-		return xdg_config;
-	} else {
-		free(xdg_config);
+	if (!xdg_config)
 		return user_config;
+	else {
+		if (user_config)
+			free(user_config);
+		return xdg_config;
 	}
 }
 
