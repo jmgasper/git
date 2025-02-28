@@ -118,8 +118,13 @@ void git_setup_gettext(void)
 	}
 
 	bindtextdomain("git", podir);
+#ifdef __HAIKU__
+	// See HaikuPorts issue #11131
+	setlocale(LC_ALL, "");
+#else
 	setlocale(LC_MESSAGES, "");
 	setlocale(LC_TIME, "");
+#endif
 	init_gettext_charset("git");
 	textdomain("git");
 
