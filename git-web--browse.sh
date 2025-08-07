@@ -133,6 +133,11 @@ if test -z "$browser" ; then
 		browser_candidates="cygstart $browser_candidates"
 	fi
 
+	# BEINCLUDES indicates Haiku
+	if test -n "$BEINCLUDES"; then
+		browser_candidates="open $browser_candidates"
+	fi
+
 	for i in $browser_candidates; do
 		init_browser_path $i
 		if type "$browser_path" > /dev/null 2>&1; then
