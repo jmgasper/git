@@ -615,7 +615,7 @@ python_conf() {
 	# This assumes that python is in user's $PATH
 	# This script is Python 2 and 3 compatible
 	cat > "$fqgitdir/gitweb/gitweb.py" <<EOF
-#!/usr/bin/env python
+#!python3
 import os
 import sys
 
